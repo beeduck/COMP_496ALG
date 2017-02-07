@@ -5,13 +5,37 @@ package com.comp496;
  */
 public class Sorts
 {
-//
-//    /*--------------Insertion Sort -----------------------*/
-//    public static long insertionsort(int[] a)
-//    {
-//
-//    }
-//
+
+    /*--------------Insertion Sort -----------------------*/
+    public static long insertionsort(int[] a)
+    {
+        long comparisons = 0;
+        if(a.length < 2) {
+            return comparisons;
+        }
+
+        int curr;
+        for(int i = 0; i < a.length; i++) {
+
+            curr = a[i];
+            for(int j = i-1; j >= 0; j--) {
+
+                if(curr < a[j]) {
+                    a[j+1] = a[j];
+                    a[j] = curr;
+
+                    comparisons++;
+                } else {
+                    break;
+                }
+
+            }
+
+        }
+
+        return comparisons;
+    }
+
 
 
     /*--------------------Merge Sort --------------------*/
