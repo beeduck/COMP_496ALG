@@ -49,13 +49,11 @@ public class Main {
             double comparisonComputed = mergeAvgComp / (mergeComps[i] * logOfN);
             double timeComputed = mergeAvgTime / (mergeComps[i] * logOfN);
 
-            String format = "%-10d%d%f%d%f%n";
+            String format = "%-15d%-15d%-15.3f%-15d%-15.3f%n";
             System.out.printf(format, mergeComps[i], mergeAvgComp, comparisonComputed, mergeAvgTime, timeComputed);
-
-//            System.out.println(Integer.toString(mergeComps[i]) + "\t" + mergeAvgComp +
-//                                "\t" + comparisonComputed + "\t" + mergeAvgTime + "\t" + timeComputed);
         }
 
+        System.out.print("\n\n");
 
         // Run insertion sort timer
         long insertionTotalComp, insertionTotalTime, insertionAvgComp, insertionAvgTime;
@@ -73,8 +71,9 @@ public class Main {
             double comparisonComputed = insertionAvgComp / (Math.pow(insertionComps[i], 2));
             double timeComputed = insertionAvgTime / (Math.pow(insertionComps[i], 2));
 
-            System.out.println(Integer.toString(insertionComps[i]) + "\t" + insertionAvgComp +
-                    "\t" + comparisonComputed + "\t" + insertionAvgTime + "\t" + timeComputed);
+            String format = "%-15d%-15d%-15.3f%-15d%-15.3f%n";
+            System.out.printf(format, insertionComps[i], insertionAvgComp,
+                              comparisonComputed, insertionAvgTime, timeComputed);
         }
 
         return;
