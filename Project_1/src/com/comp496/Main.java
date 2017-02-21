@@ -36,6 +36,7 @@ public class Main {
         long mergeTotalComp, mergeTotalTime, mergeAvgComp, mergeAvgTime;
         mergeTotalComp = mergeTotalTime = mergeAvgComp = mergeAvgTime = 0;
         for(int i = 0; i < mergeComps.length; i++) {
+            mergeTotalComp = mergeTotalTime = 0;
             for(int j = 0; j < 5; j++) {
 
                 a = createList(mergeComps[i], randomSize);
@@ -61,6 +62,7 @@ public class Main {
         long insertionTotalComp, insertionTotalTime, insertionAvgComp, insertionAvgTime;
         insertionTotalComp = insertionTotalTime = insertionAvgComp = insertionAvgTime = 0;
         for(int i = 0; i < insertionComps.length; i++) {
+            insertionTotalComp = insertionTotalTime = 0;
             for(int j = 0; j < 5; j++) {
 
                 a = createList(insertionComps[i], randomSize);
