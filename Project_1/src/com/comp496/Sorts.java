@@ -94,15 +94,17 @@ public class Sorts
     //sorts  a[ i .. k]  for 0<=i <= k < a.length
     private static long mergesort(int[] a, int i, int k)
     {
+        long comparisons = 0;
         // Mid point between k and i
         int mid = i + (k-i)/2;
 
         if(k-i >= 2) {
-            mergesort(a, i, mid);
-            mergesort(a, mid + 1, k);
+            comparisons += mergesort(a, i, mid);
+            comparisons += mergesort(a, mid + 1, k);
         }
 
-        return merge(a, i, mid, k);
+        comparisons += merge(a, i, mid, k);
+        return comparisons;
     }
 
 

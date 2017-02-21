@@ -36,14 +36,16 @@ public class Main {
         long mergeTotalComp, mergeTotalTime, mergeAvgComp, mergeAvgTime;
         mergeTotalComp = mergeTotalTime = mergeAvgComp = mergeAvgTime = 0;
         for(int i = 0; i < mergeComps.length; i++) {
-            a = createList(mergeComps[i], randomSize);
+            for(int j = 0; j < 5; j++) {
 
-            startTime = System.nanoTime();
-            mergeTotalComp += Sorts.mergesort(a);
-            mergeTotalTime += System.nanoTime() - startTime;
+                a = createList(mergeComps[i], randomSize);
+                startTime = System.nanoTime();
+                mergeTotalComp += Sorts.mergesort(a);
+                mergeTotalTime += System.nanoTime() - startTime;
+            }
 
-            mergeAvgComp = mergeTotalComp / mergeComps.length;
-            mergeAvgTime = mergeTotalTime / mergeComps.length;
+            mergeAvgComp = mergeTotalComp / 5;
+            mergeAvgTime = mergeTotalTime / 5;
 
             double logOfN = Math.log10(mergeComps[i]) / Math.log10(2);
             double comparisonComputed = mergeAvgComp / (mergeComps[i] * logOfN);
@@ -59,11 +61,13 @@ public class Main {
         long insertionTotalComp, insertionTotalTime, insertionAvgComp, insertionAvgTime;
         insertionTotalComp = insertionTotalTime = insertionAvgComp = insertionAvgTime = 0;
         for(int i = 0; i < insertionComps.length; i++) {
-            a = createList(insertionComps[i], randomSize);
+            for(int j = 0; j < 5; j++) {
 
-            startTime = System.nanoTime();
-            insertionTotalComp += Sorts.insertionsort(a);
-            insertionTotalTime += System.nanoTime() - startTime;
+                a = createList(insertionComps[i], randomSize);
+                startTime = System.nanoTime();
+                insertionTotalComp += Sorts.insertionsort(a);
+                insertionTotalTime += System.nanoTime() - startTime;
+            }
 
             insertionAvgComp = insertionTotalComp / insertionComps.length;
             insertionAvgTime = insertionTotalTime / insertionComps.length;
