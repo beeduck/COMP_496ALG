@@ -28,10 +28,47 @@ public class JobScheduler {
     }
 
     //Brute force. Try all n! orderings. Return the schedule with the most profit
+    private Schedule bruteSchedule;
     public Schedule bruteForceSolution() {
 
-        return new Schedule();
+        this.bruteSchedule = new Schedule();
+        jobPermutations(jobs, 0);
+
+        return bruteSchedule;
     }
+
+    private void jobPermutations(Job[] jobs, int index) {
+        if (index >= jobs.length - 1) {
+
+            Schedule tempSchedule = new Schedule();
+            for(Job job : jobs) {
+                tempSchedule.add(job);
+            }
+
+            if(tempSchedule.profit >= this.bruteSchedule.profit)
+                this.bruteSchedule = tempSchedule;
+
+            return;
+        }
+
+        for (int i = index; i < jobs.length; i++) {
+
+            // Move the scheduled job to the front of the array
+            Job tempJob = jobs[index];
+            jobs[index] = jobs[i];
+            jobs[i] = tempJob;
+
+            // Schedule remaining jobs
+            jobPermutations(jobs, index + 1);
+
+            // Move the scheduled job back to its original position to maintain the original array
+            tempJob = jobs[index];
+            jobs[index] = jobs[i];
+            jobs[i] = tempJob;
+        }
+    }
+
+
 
     //earliest deadline first schedule. Schedule items contributing 0 to total profit last
     public Schedule makeScheduleEDF() {
@@ -93,7 +130,7 @@ public class JobScheduler {
             startTime = addJobToSchedule(startTime, schedule, job);
         }
 
-        return new Schedule();
+        return schedule;
     }
 
     /**
