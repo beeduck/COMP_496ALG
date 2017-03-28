@@ -80,7 +80,7 @@ public class JobScheduler {
     public Schedule makeScheduleEDF() {
 
         List<Job> jobs = Arrays.asList(this.jobs);
-        Collections.sort(jobs, new Comparator<Job>() {
+        jobs.sort(new Comparator<Job>() {
             @Override
             public int compare(Job job1, Job job2) {
                 if(job1.deadline == job2.deadline)
@@ -114,7 +114,7 @@ public class JobScheduler {
     public Schedule makeScheduleSJF() {
 
         List<Job> jobs = Arrays.asList(this.jobs);
-        Collections.sort(jobs, new Comparator<Job>() {
+        jobs.sort(new Comparator<Job>() {
             @Override
             public int compare(Job job1, Job job2) {
                 if(job1.length == job2.length)
@@ -148,7 +148,7 @@ public class JobScheduler {
     public Schedule makeScheduleHPF() {
 
         List<Job> jobs = Arrays.asList(this.jobs);
-        Collections.sort(jobs, new Comparator<Job>() {
+        jobs.sort(new Comparator<Job>() {
             @Override
             public int compare(Job job1, Job job2) {
                 if(job1.profit == job2.profit)
@@ -178,36 +178,20 @@ public class JobScheduler {
         return schedule;
     }
 
-    //Your own creation. Must be <= O(n3)
     public Schedule newApproxSchedule() {
 
-        // Calculate latest possible start time for profit for each job
-        // = (deadline - joblength)
-
-//        int latestStartPossible[] = new int[jobs.length];
-
-//        List<Integer> latestStartPossible = new ArrayList<>();
-//        for(Job job : jobs) {
-//            latestStartPossible.add()
-//        }
-
+        // Sort jobs with the highest profit vs length ratio first
         List<Job> jobs = Arrays.asList(this.jobs);
-        Collections.sort(jobs, new Comparator<Job>() {
+        jobs.sort(new Comparator<Job>() {
             @Override
             public int compare(Job job1, Job job2) {
-                int latestStart1 = job1.deadline - job1.length;
-                int latestStart2 = job2.deadline - job2.length;
-                if(latestStart1 == latestStart2)
+                float profitDeadlineRatio1 = (float)job1.profit / (float)job1.length;
+                float profitDeadlineRatio2 = (float)job2.profit / (float)job2.length;
+
+                if(profitDeadlineRatio1 == profitDeadlineRatio2)
                     return 0;
 
-                // If for some reason the job is impossible to complete from 0 start to deadline
-                // then send it to the end of the sort
-                if(latestStart1 <= -1)
-                    return 1;
-                else if(latestStart2 <= -1)
-                    return -1;
-
-                return latestStart1 < latestStart2 ? -1 : 1;
+                return profitDeadlineRatio1 > profitDeadlineRatio2 ? -1 : 1;
             }
         });
 
@@ -230,6 +214,7 @@ public class JobScheduler {
 
         return schedule;
     }
+
 
     /**
      * Adds job to specified schedule with supplied start time.
