@@ -34,7 +34,13 @@ public class JobScheduler {
         this.bruteSchedule = new Schedule();
         jobPermutations(jobs, 0);
 
-        return bruteSchedule;
+        int startTime = 0;
+        Schedule returnSchedule = new Schedule();
+        for(Job job : bruteSchedule.schedule) {
+            startTime = addJobToSchedule(startTime, returnSchedule, job);
+        }
+
+        return returnSchedule;
     }
 
     private void jobPermutations(Job[] jobs, int index) {
@@ -73,19 +79,103 @@ public class JobScheduler {
     //earliest deadline first schedule. Schedule items contributing 0 to total profit last
     public Schedule makeScheduleEDF() {
 
-        return new Schedule();
+        List<Job> jobs = Arrays.asList(this.jobs);
+        Collections.sort(jobs, new Comparator<Job>() {
+            @Override
+            public int compare(Job job1, Job job2) {
+                if(job1.deadline == job2.deadline)
+                    return 0;
+
+                return job1.deadline < job2.deadline ? -1 : 1;
+            }
+        });
+
+        int startTime = 0;
+        Schedule schedule = new Schedule();
+        Queue<Job> unprofitableJobs = new LinkedList<>();
+        for(Job job : jobs) {
+            // Ensure profit is still possible - job.length + startTime <= job.deadline
+            if( (job.length + startTime) > job.deadline ) {
+                unprofitableJobs.add(job);
+                continue;
+            }
+
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        for(Job job : unprofitableJobs) {
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        return schedule;
     }
 
     //shortest job first schedule. Schedule items contributing 0 to total profit last
     public Schedule makeScheduleSJF() {
 
-        return new Schedule();
+        List<Job> jobs = Arrays.asList(this.jobs);
+        Collections.sort(jobs, new Comparator<Job>() {
+            @Override
+            public int compare(Job job1, Job job2) {
+                if(job1.length == job2.length)
+                    return 0;
+
+                return job1.length < job2.length ? -1 : 1;
+            }
+        });
+
+        int startTime = 0;
+        Schedule schedule = new Schedule();
+        Queue<Job> unprofitableJobs = new LinkedList<>();
+        for(Job job : jobs) {
+            // Ensure profit is still possible - job.length + startTime <= job.deadline
+            if( (job.length + startTime) > job.deadline ) {
+                unprofitableJobs.add(job);
+                continue;
+            }
+
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        for(Job job : unprofitableJobs) {
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        return schedule;
     }
 
     //highest profit first schedule. Schedule items contributing 0 to total profit last
     public Schedule makeScheduleHPF() {
 
-        return new Schedule();
+        List<Job> jobs = Arrays.asList(this.jobs);
+        Collections.sort(jobs, new Comparator<Job>() {
+            @Override
+            public int compare(Job job1, Job job2) {
+                if(job1.profit == job2.profit)
+                    return 0;
+
+                return job1.profit > job2.profit ? -1 : 1;
+            }
+        });
+
+        int startTime = 0;
+        Schedule schedule = new Schedule();
+        Queue<Job> unprofitableJobs = new LinkedList<>();
+        for(Job job : jobs) {
+            // Ensure profit is still possible - job.length + startTime <= job.deadline
+            if( (job.length + startTime) > job.deadline ) {
+                unprofitableJobs.add(job);
+                continue;
+            }
+
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        for(Job job : unprofitableJobs) {
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        return schedule;
     }
 
     //Your own creation. Must be <= O(n3)
@@ -123,10 +213,18 @@ public class JobScheduler {
 
         int startTime = 0;
         Schedule schedule = new Schedule();
+        Queue<Job> unprofitableJobs = new LinkedList<>();
         for(Job job : jobs) {
-            if( (job.deadline - job.length) < startTime)
+            // Ensure profit is still possible - job.length + startTime <= job.deadline
+            if( (job.length + startTime) > job.deadline ) {
+                unprofitableJobs.add(job);
                 continue;
+            }
 
+            startTime = addJobToSchedule(startTime, schedule, job);
+        }
+
+        for(Job job : unprofitableJobs) {
             startTime = addJobToSchedule(startTime, schedule, job);
         }
 

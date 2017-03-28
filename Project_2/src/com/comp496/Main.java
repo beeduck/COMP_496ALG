@@ -12,9 +12,20 @@ public class Main
     public static void main (String[] args)
     {
 
-        int[] length = {7,4,2,5};
-        int[] deadline = {7 ,16 ,8, 10};
-        int[] profit = {10, 9, 14, 13};
+//        int[] length   = {7 , 4 , 2 , 5 };
+//        int[] deadline = {7 , 16, 8 , 10};
+//        int[] profit   = {10, 9 , 14, 13};
+
+        int[] length = { 2,3,1,10,7,4,2,5,7,7};
+        int[] deadline = { 10,12, 9 ,22,  10, 4, 18, 15, 5, 9};
+        int[] profit = { 2,5,13,28,9,14, 2, 7, 3, 10};
+
+//        int[] length = { 2,3,1,10,7,  4,6,9,3,2,  5,2,5,7,7,  6,3,7,8,4,  5,2,9,10,5};
+//        int[] deadline = { 10,12,15,8,10,  9,22,12,15,35,  29,32,45,41,13,
+//                16,10,20,10,4,  18,15,5,9, 30};
+//        int[] profit = { 2,5,13,28,8, 7,6,5,3,4,  9,7,6,9,14,  2,7,11,3,10,
+//                8,5,9,10,3 };
+
         JobScheduler js = new JobScheduler(length,deadline, profit);
         System.out.println("Jobs to be scheduled");
         System.out.println("Job format is " +
