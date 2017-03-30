@@ -185,13 +185,23 @@ public class JobScheduler {
         jobs.sort(new Comparator<Job>() {
             @Override
             public int compare(Job job1, Job job2) {
-                float profitDeadlineRatio1 = (float)job1.profit / (float)job1.length;
-                float profitDeadlineRatio2 = (float)job2.profit / (float)job2.length;
+                float profitDurationRatio1 = (float)job1.profit / (float)job1.length;
+                float profitDurationRatio2 = (float)job2.profit / (float)job2.length;
 
-                if(profitDeadlineRatio1 == profitDeadlineRatio2)
+//                 If profit is the same schedule the earlier deadline first
+//                if(profitDurationRatio1 == profitDurationRatio2)
+//                    return job1.deadline < job2.deadline ? -1 : 1;
+
+                float job1Weight = (float)jobs.size() / (float)job1.deadline;
+                float job2Weight = (float)jobs.size() / (float)job2.deadline;
+
+                profitDurationRatio1 *= job1Weight;
+                profitDurationRatio2 *= job2Weight;
+
+                if(profitDurationRatio1 == profitDurationRatio2)
                     return 0;
 
-                return profitDeadlineRatio1 > profitDeadlineRatio2 ? -1 : 1;
+                return profitDurationRatio1 > profitDurationRatio2 ? -1 : 1;
             }
         });
 

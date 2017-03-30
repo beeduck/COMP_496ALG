@@ -10,10 +10,9 @@ import java.util.Random;
  */
 public class Main
 {
-    private final static int JOBS = 100;
+    private final static int JOBS = 1000000;
 
-    public static void main (String[] args)
-    {
+    public static void main (String[] args) {
 
 //        int[] length   = {7 , 4 , 2 , 5 };
 //        int[] deadline = {7 , 16, 8 , 10};
@@ -28,10 +27,10 @@ public class Main
                 16,10,20,10,4,  18,15,5,9, 30};
         int[] profit = { 2,5,13,28,8, 7,6,5,3,4,  9,7,6,9,14,  2,7,11,3,10,
                 8,5,9,10,3 };
-
-        length   = randomVariables(JOBS, 1, JOBS/5);
-        deadline = randomVariables(JOBS, 1, JOBS);
-        profit   = randomVariables(JOBS, 1, 5);
+//
+//        length   = randomVariables(JOBS, 1, 10);
+//        deadline = randomVariables(JOBS, 20, JOBS/32);
+//        profit   = randomVariables(JOBS, 1, 5);
 
         JobScheduler js = new JobScheduler(length,deadline, profit);
         System.out.println("Jobs to be scheduled");
@@ -39,7 +38,7 @@ public class Main
                 "(length, deadline, profit, start, finish)" );
         js.printJobs();
 
-//        //--------------------------------------------
+        //--------------------------------------------
 //        System.out.println("\nOptimal Solution Using Brute Force O(n!)");
 //        Schedule bestSchedule = js.bruteForceSolution();
 //        System.out.println(bestSchedule);
