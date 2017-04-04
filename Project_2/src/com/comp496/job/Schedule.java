@@ -14,14 +14,8 @@ public class Schedule {
         schedule = new ArrayList<Job>();
     }
 
-    int currentTime = 0;
     public void add(Job job) {
         schedule.add(job);
-
-        currentTime += job.length;
-
-        if(currentTime <= job.deadline)
-            profit += job.profit;
     }
 
 
