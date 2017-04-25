@@ -103,6 +103,7 @@ public class Graph {
     private ArrayList<EdgeNode> spanningEdges;
     public Graph dfsTraversal(int start) {
 
+        // Initialize DFS traversal
         cycle = false;
         visitedMap = new HashMap<>();
         spanningEdges = new ArrayList<>();
@@ -110,9 +111,13 @@ public class Graph {
         for(int i = 0; i < nVertices; i++)
             visitedMap.put(i, false);
 
+
+        // Begin DFS traversal on start vertex
         int components = 1;
         dfsTraversal(start, adjList[start]);
 
+
+        // Begin DFS traversal on unvisited vertices
         boolean connected = true;
         for(Map.Entry<Integer, Boolean> entry : visitedMap.entrySet()) {
             if(!entry.getValue()) {
@@ -122,16 +127,14 @@ public class Graph {
             }
         }
 
+
+        // Output DFS traversal results
         System.out.println( "dfs - cycle: " + (cycle ? "yes" : "no") );
         System.out.println( "dfs - connected: " + (connected ? "yes" : "no") );
         System.out.println( "dfs - components: " + components);
 
         if(connected) {
-            Graph graph = new Graph(nVertices);
-            for(EdgeNode edgeNode : spanningEdges)
-                graph.addEdge(edgeNode.vertex1, edgeNode.vertex2, edgeNode.weight);
-
-            return graph;
+            return createSpanningGraph(spanningEdges);
         }
 
         return null;
@@ -143,6 +146,7 @@ public class Graph {
             visitedMap.put(vertex, true);
         }
 
+        // Traverse each edge if the destination vertex is unvisited
         for(EdgeNode edgeNode : edgeNodes) {
             if(!visitedMap.get(edgeNode.vertex2)) {
                 spanningEdges.add(edgeNode);
@@ -161,6 +165,7 @@ public class Graph {
     Otherwise return null.
     */
 
+        // Initialize BFS traversal
         visitedMap = new HashMap<>();
         for(int i = 0; i < nVertices; i++)
             visitedMap.put(i, false);
@@ -168,8 +173,9 @@ public class Graph {
         spanningEdges = new ArrayList<>();
         ArrayList<ArrayList<Integer>> levels = new ArrayList<>();
 
-        Queue<EdgeNode> edgeNodeQueue = new LinkedList<>();
 
+        // Initialize queue with starting vertex edges
+        Queue<EdgeNode> edgeNodeQueue = new LinkedList<>();
         ArrayList<EdgeNode> edgeNodes = adjList[start];
         visitedMap.put(start, true);
         ArrayList<Integer> levelList = new ArrayList<>();
@@ -178,6 +184,8 @@ public class Graph {
         for(EdgeNode edgeNode : edgeNodes)
             edgeNodeQueue.add(edgeNode);
 
+
+        // Begin traversal
         EdgeNode edgeNode;
         levelList = new ArrayList<>();
         while(!edgeNodeQueue.isEmpty()) {
@@ -201,6 +209,7 @@ public class Graph {
         }
 
 
+        // Output traversal results
         boolean connected = true;
         for(boolean bool : visitedMap.values())
             if(!bool) connected = false;
@@ -211,7 +220,7 @@ public class Graph {
         System.out.println( "bfs - connected: " + (connected ? "yes" : "no") );
 
         if(connected) {
-            // TODO: Make spanning graph
+            return createSpanningGraph(spanningEdges);
         }
 
         return null;
@@ -255,6 +264,13 @@ public class Graph {
     }
 
 
+    private Graph createSpanningGraph(ArrayList<EdgeNode> spanningEdges) {
+        Graph graph = new Graph(nVertices);
+        for(EdgeNode edgeNode : spanningEdges)
+            graph.addEdge(edgeNode.vertex1, edgeNode.vertex2, edgeNode.weight);
+
+        return graph;
+    }
 }
 
 class EdgeNode implements Comparable<EdgeNode> {
