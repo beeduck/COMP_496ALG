@@ -1,5 +1,7 @@
 package com.comp496.p3;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -16,6 +18,12 @@ public class Main {
             dfsGraph.printGraph();
 
         g.bfsTraversal(1);
+
+        int x = 0;
+        int y = 4;
+        ArrayList<Integer> path = g.getShortestEdgePath(x, y);
+        if(path != null)
+            System.out.println("Shortest path " + x + " to " + y + '\t' + path.toString());
 
 //        int  x,y,z;
 //        //Set values of x, y and z to vertices in your graph

@@ -232,7 +232,42 @@ public class Graph {
      If no such list, return null
      Use breadth first search
 */
-        return new ArrayList<>();
+
+        ArrayList<Integer> path = new ArrayList<>();
+        path.add(x);
+        if(x == y)
+            return path;
+
+        initializeVisitedMap();
+
+        ArrayList<EdgeNode> edgeNodes = adjList[x];
+        Queue<ArrayList<EdgeNode>> edgeNodesQueue = new LinkedList<>();
+        edgeNodesQueue.add(edgeNodes);
+
+        while(!edgeNodesQueue.isEmpty()) {
+            EdgeNode minEdgeNode = null;
+            edgeNodes = edgeNodesQueue.remove();
+            for (EdgeNode edgeNode : edgeNodes) {
+                if (edgeNode.vertex2 == y) {
+                    path.add(edgeNode.vertex2);
+                    return path;
+                }
+
+                if (minEdgeNode == null)
+                    minEdgeNode = edgeNode;
+
+                if ( (edgeNode.weight < minEdgeNode.weight) && (!visitedMap.get(edgeNode.vertex2)) )
+                    minEdgeNode = edgeNode;
+            }
+
+            if(minEdgeNode != null) {
+                edgeNodesQueue.add(adjList[minEdgeNode.vertex2]);
+                visitedMap.put(minEdgeNode.vertex2, true);
+                path.add(minEdgeNode.vertex2);
+            }
+        }
+
+        return null;
     }
 
 
@@ -270,6 +305,12 @@ public class Graph {
             graph.addEdge(edgeNode.vertex1, edgeNode.vertex2, edgeNode.weight);
 
         return graph;
+    }
+
+    private void initializeVisitedMap() {
+        visitedMap = new HashMap<>();
+        for(int i = 0; i < nVertices; i++)
+            visitedMap.put(i, false);
     }
 }
 
