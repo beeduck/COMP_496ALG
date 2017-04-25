@@ -13,6 +13,7 @@ public class Graph {
     private ArrayList<EdgeNode>[] adjList;
     private int nVertices;
     private int nEdges;
+    private int totalEdgeWeight;
 
     public Graph(String inputFileName) {
         //creates Graph from data in file
@@ -20,6 +21,7 @@ public class Graph {
         String line;
         String[] split;
         this.nEdges = 0;
+        this.totalEdgeWeight = 0;
         try {
             FileReader fileReader = new FileReader(inputFileName);
 
@@ -46,7 +48,8 @@ public class Graph {
 
     public Graph(int n) {
         //Creates a  Graph with n vertices and 0 edges
-        nVertices = n;
+        this.nVertices = n;
+        this.totalEdgeWeight = 0;
         this.initializeAdjList();
     }
 
@@ -68,6 +71,7 @@ public class Graph {
 
         adjList[j].add(new EdgeNode(j, i, weight));
 
+        totalEdgeWeight += weight;
         nEdges++;
     }
 
@@ -91,11 +95,6 @@ public class Graph {
     }
 
     public int get_TotalWeightOfEdges() {
-        int totalEdgeWeight = 0;
-        // TODO: Complete total weight
-//        for(EdgeNode edgeNode : adjList)
-//            totalEdgeWeight += edgeNode.weight;
-
         return totalEdgeWeight;
     }
 
@@ -161,7 +160,61 @@ public class Graph {
     If the graph is connected, return the spanning tree discovered.
     Otherwise return null.
     */
-        return new Graph(0);
+
+        visitedMap = new HashMap<>();
+        for(int i = 0; i < nVertices; i++)
+            visitedMap.put(i, false);
+
+        spanningEdges = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> levels = new ArrayList<>();
+
+        Queue<EdgeNode> edgeNodeQueue = new LinkedList<>();
+
+        ArrayList<EdgeNode> edgeNodes = adjList[start];
+        visitedMap.put(start, true);
+        ArrayList<Integer> levelList = new ArrayList<>();
+        levelList.add(start);
+        levels.add(levelList);
+        for(EdgeNode edgeNode : edgeNodes)
+            edgeNodeQueue.add(edgeNode);
+
+        EdgeNode edgeNode;
+        levelList = new ArrayList<>();
+        while(!edgeNodeQueue.isEmpty()) {
+
+            edgeNode = edgeNodeQueue.remove();
+            if(!visitedMap.get(edgeNode.vertex2)) {
+                levelList.add(edgeNode.vertex2);
+                visitedMap.put(edgeNode.vertex2, true);
+                spanningEdges.add(edgeNode);
+                for(EdgeNode edgeNode1 : adjList[edgeNode.vertex2]) {
+                    edgeNodeQueue.add(edgeNode1);
+                }
+
+            } else {
+                if(!levelList.isEmpty()) {
+                    levels.add(levelList);
+                    levelList = new ArrayList<>();
+                }
+            }
+
+        }
+
+
+        boolean connected = true;
+        for(boolean bool : visitedMap.values())
+            if(!bool) connected = false;
+
+        int level = 0;
+        for(ArrayList<Integer> arrayList : levels)
+            System.out.println("L" + level++ +  ": " + arrayList);
+        System.out.println( "bfs - connected: " + (connected ? "yes" : "no") );
+
+        if(connected) {
+            // TODO: Make spanning graph
+        }
+
+        return null;
     }
 
     public ArrayList<Integer> getShortestEdgePath(int x, int y) {

@@ -12,7 +12,10 @@ public class Main {
         g.printGraph();
 
         Graph dfsGraph = g.dfsTraversal(1);
-        dfsGraph.printGraph();
+        if(dfsGraph != null)
+            dfsGraph.printGraph();
+
+        g.bfsTraversal(1);
 
 //        int  x,y,z;
 //        //Set values of x, y and z to vertices in your graph
