@@ -278,6 +278,33 @@ public class Graph {
     To simulate an updateKey method in priority queue, see Problem C-14.3 from text.
     Prints shortest paths from vertex start to all other vertices reachable from start
 */
+
+        // Distance from start
+        // Parent of node on shortest path
+        // s[k] = 0 not found or 1 found shortest path - visited - can use map
+
+        PriorityQueue<PQNode> priorityQueue = new PriorityQueue<>();
+
+        // TODO: init stuff
+
+        PQNode pqNode = null;
+        while(!priorityQueue.isEmpty()) {
+            pqNode = priorityQueue.remove();
+            // S[pq.vertex] = 1;
+            for(EdgeNode edgeNode : adjList[pqNode.vertex]) {
+                // if(S[edgeNode.vertex2] == 1)
+                //      continue;
+
+                if(distance[edgeNode.vertex2] > pqNode.distance + edgeNode.weight) {
+                    distance[edgeNode.vertex2] = pqNode.distance + edgeNode.weight;
+                    parent[edgeNode.vertex2] = pqNode.vertex;
+                    // update key in queue
+                }
+
+            }
+        }
+
+        // TODO: Print vertices and distances from start
     }
 
     public int[] bellmanFordShortestPaths(int start) {
