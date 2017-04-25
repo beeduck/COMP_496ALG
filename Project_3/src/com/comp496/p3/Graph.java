@@ -4,17 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by duck on 4/24/17.
  */
 public class Graph {
-    private ArrayList<EdgeNode> adjList;
+    private ArrayList<EdgeNode>[] adjList;
     private int nVertices;
     private int nEdges;
-
 
     public Graph(String inputFileName) {
         //creates Graph from data in file
@@ -22,7 +20,6 @@ public class Graph {
         String line;
         String[] split;
         this.nEdges = 0;
-        this.adjList = new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(inputFileName);
 
@@ -30,6 +27,8 @@ public class Graph {
 
             if( (line = bufferedReader.readLine()) != null)
                 this.nVertices = Integer.valueOf(line);
+
+            this.initializeAdjList();
 
             while( (line = bufferedReader.readLine()) != null) {
                 split = line.split(" ");
@@ -46,14 +45,29 @@ public class Graph {
     }
 
     public Graph(int n) {
+        //Creates a  Graph with n vertices and 0 edges
         nVertices = n;
-        adjList = new ArrayList();
-    }   //Creates a  Graph with n vertices and 0 edges
+        this.initializeAdjList();
+    }
+
+    private void initializeAdjList() {
+        adjList = new ArrayList[this.nVertices];
+        for(int i = 0; i < nVertices; i++)
+            adjList[i] = new ArrayList<>();
+    }
 
     public void addEdge(int i, int j, int weight) {
         //adds an edge to the graph
-        adjList.add(new EdgeNode(i, j, weight));
-        adjList.add(new EdgeNode(j, i, weight));
+        if(adjList[i] == null)
+            adjList[i] = new ArrayList<>();
+
+        adjList[i].add(new EdgeNode(i, j, weight));
+
+        if(adjList[j] == null)
+            adjList[j] = new ArrayList<>();
+
+        adjList[j].add(new EdgeNode(j, i, weight));
+
         nEdges++;
     }
 
@@ -61,28 +75,10 @@ public class Graph {
         //prints nVertices, nEdges, and adjacency lists and total edge weight
         System.out.printf("Graph: nVertices = %d\tnEdges = %d\ttotalEdgeWeight = %d\n", nVertices, nEdges, get_TotalWeightOfEdges());
         System.out.println("Adjacency Lists");
-        TreeMap<Integer, String> hashMap = new TreeMap<Integer, String>();
-        String vertexOutput;
-        for(EdgeNode edgeNode : adjList) {
 
-            if(hashMap.containsKey(edgeNode.vertex1)) {
-
-                vertexOutput = hashMap.get(edgeNode.vertex1);
-                vertexOutput += ", (" + edgeNode.vertex1 + ", " + edgeNode.vertex2 + ", " + edgeNode.weight + ")";
-
-                hashMap.put(edgeNode.vertex1, vertexOutput);
-
-            } else {
-
-                vertexOutput = "v= " + edgeNode.vertex1 + "\t[(" + edgeNode.vertex1 + ", " + edgeNode.vertex2 + ", " + edgeNode.weight + ")";
-                hashMap.put(edgeNode.vertex1, vertexOutput);
-
-            }
-
-        }
-
-        for(String string : hashMap.values())
-            System.out.println(string + "]");
+        int vertexCount = 0;
+        for(ArrayList<EdgeNode> edgeNodes : adjList)
+            System.out.println("v= " + vertexCount++ + '\t' + edgeNodes.toString());
 
     }
 
@@ -96,29 +92,66 @@ public class Graph {
 
     public int get_TotalWeightOfEdges() {
         int totalEdgeWeight = 0;
-        for(EdgeNode edgeNode : adjList)
-            totalEdgeWeight += edgeNode.weight;
+        // TODO: Complete total weight
+//        for(EdgeNode edgeNode : adjList)
+//            totalEdgeWeight += edgeNode.weight;
 
         return totalEdgeWeight;
     }
 
-
+    private boolean cycle;
+    private HashMap<Integer, Boolean> visitedMap;
+    private ArrayList<EdgeNode> spanningEdges;
     public Graph dfsTraversal(int start) {
-        /* Use recursion by calling a recursive dfs method;
-            Visit all nodes
-            If graph is not connected you will need to call dfs more than once to visit all
-            node and to print out the information below.
-            Print the following information gleaned from the dfs traversal
-        Print nodes in order visited
-        Connected?    ____
-        NumberOfComponents?   _____
-        Has a cycle?   _______
-               If the graph is connected, return the spanning tree in the dfs traversal.
-                Otherwise, return null.
 
-        */
+        cycle = false;
+        visitedMap = new HashMap<>();
+        spanningEdges = new ArrayList<>();
 
-        return new Graph(0);
+        for(int i = 0; i < nVertices; i++)
+            visitedMap.put(i, false);
+
+        int components = 1;
+        dfsTraversal(start, adjList[start]);
+
+        boolean connected = true;
+        for(Map.Entry<Integer, Boolean> entry : visitedMap.entrySet()) {
+            if(!entry.getValue()) {
+                connected = false;
+                components++;
+                dfsTraversal(entry.getKey(), adjList[entry.getKey()]);
+            }
+        }
+
+        System.out.println( "dfs - cycle: " + (cycle ? "yes" : "no") );
+        System.out.println( "dfs - connected: " + (connected ? "yes" : "no") );
+        System.out.println( "dfs - components: " + components);
+
+        if(connected) {
+            Graph graph = new Graph(nVertices);
+            for(EdgeNode edgeNode : spanningEdges)
+                graph.addEdge(edgeNode.vertex1, edgeNode.vertex2, edgeNode.weight);
+
+            return graph;
+        }
+
+        return null;
+    }
+
+    private void dfsTraversal(int vertex, ArrayList<EdgeNode> edgeNodes) {
+        System.out.println("dfs visited: " + vertex);
+        if(!visitedMap.get(vertex)) {
+            visitedMap.put(vertex, true);
+        }
+
+        for(EdgeNode edgeNode : edgeNodes) {
+            if(!visitedMap.get(edgeNode.vertex2)) {
+                spanningEdges.add(edgeNode);
+                dfsTraversal(edgeNode.vertex2, adjList[edgeNode.vertex2]);
+            } else {
+                cycle = true;
+            }
+        }
     }
 
 
@@ -170,7 +203,6 @@ public class Graph {
 
 
 }
-
 
 class EdgeNode implements Comparable<EdgeNode> {
     int vertex1;

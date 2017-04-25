@@ -11,6 +11,9 @@ public class Main {
 //        g.addEdge(2, 1, 4);
         g.printGraph();
 
+        Graph dfsGraph = g.dfsTraversal(1);
+        dfsGraph.printGraph();
+
 //        int  x,y,z;
 //        //Set values of x, y and z to vertices in your graph
 //        Graph tree  = g.dfsTraversal(x);
