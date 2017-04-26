@@ -272,39 +272,57 @@ public class Graph {
 
 
     public void dijkstraShortestPaths(int start) {
-/* Implement Dijkstra algorithm from text as discussed in class;
-    Use the Java PriorityQueue<PQNode>   class. Use PQNode class below.
-    This class has no updateKey method
-    To simulate an updateKey method in priority queue, see Problem C-14.3 from text.
-    Prints shortest paths from vertex start to all other vertices reachable from start
-*/
 
         // Distance from start
+        int[] distance = new int[nVertices];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[start] = 0;
+
         // Parent of node on shortest path
-        // s[k] = 0 not found or 1 found shortest path - visited - can use map
+        int[] parentNode = new int[nVertices];
+        Arrays.fill(parentNode, -1);
+
+        initializeVisitedMap();
 
         PriorityQueue<PQNode> priorityQueue = new PriorityQueue<>();
 
-        // TODO: init stuff
+        // Initialize PQ
+        for(int i = 0; i < nVertices; i++)
+            priorityQueue.add(new PQNode(i, distance[i]));
 
-        PQNode pqNode = null;
-        while(!priorityQueue.isEmpty()) {
-            pqNode = priorityQueue.remove();
-            // S[pq.vertex] = 1;
+        PQNode pqNode = priorityQueue.remove();
+        while(pqNode.distance != Integer.MAX_VALUE){
+            visitedMap.put(pqNode.vertex, true);
             for(EdgeNode edgeNode : adjList[pqNode.vertex]) {
-                // if(S[edgeNode.vertex2] == 1)
-                //      continue;
+                if(visitedMap.get(edgeNode.vertex2))
+                    continue;
 
+                // Update distance for v2 if v1 + the weight from it to v2 is less than v2 current distance
                 if(distance[edgeNode.vertex2] > pqNode.distance + edgeNode.weight) {
                     distance[edgeNode.vertex2] = pqNode.distance + edgeNode.weight;
-                    parent[edgeNode.vertex2] = pqNode.vertex;
-                    // update key in queue
+                    parentNode[edgeNode.vertex2] = pqNode.vertex;
+                    priorityQueue.add(new PQNode(edgeNode.vertex2, distance[edgeNode.vertex2]));
                 }
-
             }
+
+            pqNode = priorityQueue.remove();
         }
 
-        // TODO: Print vertices and distances from start
+        // Output distance and weights
+        for(int i = 0; i < nVertices; i++) {
+            if(i == start || distance[i] == Integer.MAX_VALUE)
+                continue;
+
+            System.out.print("dijk - [" + start + " to " + i + "]:\tweight: " + distance[i]);
+            String path = String.valueOf(i);
+            int parent = parentNode[i];
+            while(parent != start) {
+                path = String.valueOf(parent) + " " + path;
+                parent = parentNode[parent];
+            }
+            path = String.valueOf(start) + " " + path;
+            System.out.println('\t' + path);
+        }
     }
 
     public int[] bellmanFordShortestPaths(int start) {
