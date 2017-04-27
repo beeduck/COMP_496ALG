@@ -20,7 +20,7 @@ public class Main {
         g.bfsTraversal(1);
 
         int x = 0;
-        int y = 4;
+        int y = 5;
         ArrayList<Integer> path = g.getShortestEdgePath(x, y);
         if(path != null)
             System.out.println("Shortest path " + x + " to " + y + '\t' + path.toString());

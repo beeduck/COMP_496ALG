@@ -221,46 +221,46 @@ public class Graph {
         return null;
     }
 
-    // TODO: Fix?
     public ArrayList<Integer> getShortestEdgePath(int x, int y) {
-/*
-     Return the shortest edge path from x to y .
-     If no such list, return null
-     Use breadth first search
-*/
 
         ArrayList<Integer> path = new ArrayList<>();
-        path.add(x);
-        if(x == y)
+        if(x == y) {
+            path.add(x);
             return path;
+        }
 
         initializeVisitedMap();
 
-        ArrayList<EdgeNode> edgeNodes = adjList[x];
-        Queue<ArrayList<EdgeNode>> edgeNodesQueue = new LinkedList<>();
-        edgeNodesQueue.add(edgeNodes);
+        int previousNode[] = new int[nVertices];
+        Queue<EdgeNode> edgeNodeQueue = new LinkedList<>();
+        for(EdgeNode edgeNode : adjList[x])
+            edgeNodeQueue.add(edgeNode);
 
-        while(!edgeNodesQueue.isEmpty()) {
-            EdgeNode minEdgeNode = null;
-            edgeNodes = edgeNodesQueue.remove();
-            for (EdgeNode edgeNode : edgeNodes) {
-                if (edgeNode.vertex2 == y) {
-                    path.add(edgeNode.vertex2);
-                    return path;
+        EdgeNode edgeNode;
+        while(!edgeNodeQueue.isEmpty()) {
+
+            edgeNode = edgeNodeQueue.remove();
+            if(visitedMap.get(edgeNode.vertex2))
+                continue;
+
+            visitedMap.put(edgeNode.vertex2, true);
+
+            previousNode[edgeNode.vertex2] = edgeNode.vertex1;
+
+            if(edgeNode.vertex2 == y) {
+                int current = y;
+                path.add(current);
+                while(previousNode[current] != x) {
+                    path.add(previousNode[current]);
+                    current = previousNode[current];
                 }
-
-                if (minEdgeNode == null)
-                    minEdgeNode = edgeNode;
-
-                if ( (edgeNode.weight < minEdgeNode.weight) && (!visitedMap.get(edgeNode.vertex2)) )
-                    minEdgeNode = edgeNode;
+                path.add(x);
+                Collections.reverse(path);
+                return path;
             }
 
-            if(minEdgeNode != null) {
-                edgeNodesQueue.add(adjList[minEdgeNode.vertex2]);
-                visitedMap.put(minEdgeNode.vertex2, true);
-                path.add(minEdgeNode.vertex2);
-            }
+            for(EdgeNode edgeNode1 : adjList[edgeNode.vertex2])
+                edgeNodeQueue.add(edgeNode1);
         }
 
         return null;
