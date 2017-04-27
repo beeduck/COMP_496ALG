@@ -328,6 +328,44 @@ public class Graph {
     public int[] bellmanFordShortestPaths(int start) {
 /* Implement Bellman Ford Shortest Path algorithm from text
     Prints shortest paths from vertex start to all other vertices reachable from start */
+
+        // Distance from start
+        int[] distance = new int[nVertices];
+        Arrays.fill(distance, Integer.MAX_VALUE/2);
+        distance[start] = 0;
+
+        // Parent of node on shortest path
+        int[] parentNode = new int[nVertices];
+        Arrays.fill(parentNode, -1);
+
+        for(int i = 0; i < nVertices - 1; i++) {
+            for(EdgeNode edgeNode : adjList[i]) {
+
+                if(distance[edgeNode.vertex2] > distance[i] + edgeNode.weight) {
+                    distance[edgeNode.vertex2] = distance[i] + edgeNode.weight;
+                    parentNode[edgeNode.vertex2] = i;
+                }
+
+            }
+        }
+
+
+        // Output distance and weights
+        for(int i = 0; i < nVertices; i++) {
+            if(i == start || distance[i] == Integer.MAX_VALUE)
+                continue;
+
+            System.out.print("bellman - [" + start + " to " + i + "]:\tweight: " + distance[i]);
+            String path = String.valueOf(i);
+            int parent = parentNode[i];
+            while(parent != start) {
+                path = String.valueOf(parent) + " " + path;
+                parent = parentNode[parent];
+            }
+            path = String.valueOf(start) + " " + path;
+            System.out.println('\t' + path);
+        }
+
         return new int[0];
     }
 
@@ -340,6 +378,9 @@ public class Graph {
      else
 	Print a message and return null
  */
+
+        
+
         return new Graph(0);
     }
 
