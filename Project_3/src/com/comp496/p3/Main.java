@@ -25,7 +25,7 @@ public class Main {
         if(path != null)
             System.out.println("Shortest path " + x + " to " + y + '\t' + path.toString());
 
-        g.bellmanFordShortestPaths(1);
+        g.KruskalMST();
 
 //        int  x,y,z;
 //        //Set values of x, y and z to vertices in your graph

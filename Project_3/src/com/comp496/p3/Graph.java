@@ -159,11 +159,6 @@ public class Graph {
 
 
     public Graph bfsTraversal(int start) {
-/*
-    Print the level lists found from the start vertex, one line at a time, labeled
-    If the graph is connected, return the spanning tree discovered.
-    Otherwise return null.
-    */
 
         // Initialize BFS traversal
         visitedMap = new HashMap<>();
@@ -226,6 +221,7 @@ public class Graph {
         return null;
     }
 
+    // TODO: Fix?
     public ArrayList<Integer> getShortestEdgePath(int x, int y) {
 /*
      Return the shortest edge path from x to y .
@@ -326,8 +322,6 @@ public class Graph {
     }
 
     public int[] bellmanFordShortestPaths(int start) {
-/* Implement Bellman Ford Shortest Path algorithm from text
-    Prints shortest paths from vertex start to all other vertices reachable from start */
 
         // Distance from start
         int[] distance = new int[nVertices];
@@ -370,18 +364,60 @@ public class Graph {
     }
 
     public Graph KruskalMST() {
-/* Implement Kruskal algorithm from text.
-    Use clusters.
-    If graph is connected
-            Print the edges of the MST found and its total weight
-             Returns the minimum spanning tree as a Graph
-     else
-	Print a message and return null
- */
 
-        
+        Graph graph = new Graph(nVertices);
 
-        return new Graph(0);
+        // Initialize array for parent of cluster
+        int clusterParents = nVertices;
+        int parentCluster[] = new int[nVertices];
+        for(int i = 0; i < nVertices; i++) {
+            parentCluster[i] = i;
+        }
+
+        PriorityQueue<EdgeNode> priorityQueue = new PriorityQueue<>();
+
+        // Initialize PQ
+        for(int i = 0; i < nVertices; i++)
+            for(EdgeNode edgeNode : adjList[i])
+                priorityQueue.add(edgeNode);
+
+        EdgeNode edgeNode;
+        while(!priorityQueue.isEmpty()) {
+            edgeNode = priorityQueue.remove();
+
+            if(parentCluster[edgeNode.vertex2] != parentCluster[edgeNode.vertex1]) {
+
+                // Decrease cluster parents and add edge to graph
+                clusterParents--;
+                graph.addEdge(edgeNode.vertex1, edgeNode.vertex2, edgeNode.weight);
+
+                // Move all nodes of old cluster parent to new cluster parent
+                int oldCluster = parentCluster[edgeNode.vertex2];
+                for(int i = 0; i < nVertices; i++) {
+                    if(parentCluster[i] == oldCluster)
+                        parentCluster[i] = parentCluster[edgeNode.vertex1];
+                }
+
+            }
+        }
+
+        // Check if all cluster parents are the same
+//        boolean connected = true;
+//        int previousParent = parentCluster[0];
+//        for(int parent : parentCluster)
+//            if(parent != previousParent)
+//                connected = false;
+
+        // Output graph if there is a single cluster (connected)
+        if(clusterParents != 1) {
+            System.out.println("krustal - mst");
+            graph.printGraph();
+
+            return graph;
+        } else {
+            System.out.println("kruskal - graph is not connected.");
+            return null;
+        }
     }
 
 
