@@ -1,3 +1,9 @@
+/**
+ * Kristopher Morris
+ * Project 3 - COMP 496ALG Spring 2017
+ * 04/27/17
+ */
+
 package com.comp496.p3;
 
 import java.io.BufferedReader;
@@ -6,9 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Created by duck on 4/24/17.
- */
 public class Graph {
     private ArrayList<EdgeNode>[] adjList;
     private int nVertices;
@@ -33,6 +36,8 @@ public class Graph {
             this.initializeAdjList();
 
             while( (line = bufferedReader.readLine()) != null) {
+                if(line.isEmpty())
+                    continue;
                 split = line.split(" ");
                 this.addEdge(Integer.valueOf(split[0]),
                               Integer.valueOf(split[1]),
@@ -148,11 +153,26 @@ public class Graph {
 
         // Traverse each edge if the destination vertex is unvisited
         for(EdgeNode edgeNode : edgeNodes) {
+            if(edgeNode.visited)
+                continue;
+
             if(!visitedMap.get(edgeNode.vertex2)) {
                 spanningEdges.add(edgeNode);
+                visitEdge(edgeNode);
                 dfsTraversal(edgeNode.vertex2, adjList[edgeNode.vertex2]);
-            } else {
+            } else if (visitedMap.get(edgeNode.vertex2) && !edgeNode.visited) {
                 cycle = true;
+            }
+        }
+    }
+
+    private void visitEdge(EdgeNode edgeNode) {
+
+        edgeNode.visited = true;
+
+        for(EdgeNode edgeNode1 : adjList[edgeNode.vertex2]) {
+            if(edgeNode1.vertex2 == edgeNode.vertex1) {
+                edgeNode1.visited = true;
             }
         }
     }
@@ -401,15 +421,8 @@ public class Graph {
             }
         }
 
-        // Check if all cluster parents are the same
-//        boolean connected = true;
-//        int previousParent = parentCluster[0];
-//        for(int parent : parentCluster)
-//            if(parent != previousParent)
-//                connected = false;
-
         // Output graph if there is a single cluster (connected)
-        if(clusterParents != 1) {
+        if(clusterParents == 1) {
             System.out.println("krustal - mst");
             graph.printGraph();
 
@@ -441,10 +454,13 @@ class EdgeNode implements Comparable<EdgeNode> {
     int vertex2;
     int weight;
 
+    boolean visited;
+
     public EdgeNode(int v1, int v2, int w) {
         vertex1 = v1;
         vertex2 = v2;
         weight = w;
+        visited = false;
     }
 
     public int compareTo(EdgeNode node) {
