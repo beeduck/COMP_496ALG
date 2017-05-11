@@ -369,10 +369,15 @@ public class Graph {
             if(i == start || distance[i] == Integer.MAX_VALUE)
                 continue;
 
+            if(distance[i] == Integer.MAX_VALUE / 2) {
+                System.out.println("bellman - [" + start + " to " + i + "]:\tUnable to find through normal bellman alg.");
+                continue;
+            }
+
             System.out.print("bellman - [" + start + " to " + i + "]:\tweight: " + distance[i]);
             String path = String.valueOf(i);
             int parent = parentNode[i];
-            while(parent != start) {
+            while(parent != start && parent != -1) {
                 path = String.valueOf(parent) + " " + path;
                 parent = parentNode[parent];
             }
